@@ -82,7 +82,7 @@ if region_map:
 
     # Plot the US states
     # Download the file from https://www.naturalearthdata.com/http//www.naturalearthdata.com/download/110m/cultural/ne_110m_admin_1_states_provinces.zip
-    gdf = salem.read_shapefile('/Volumes/SAMSUNG/WORK/POSTDOC_RSMAS_2016/DATA/natural_earth/ne_110m_admin_1_states_provinces/ne_110m_admin_1_states_provinces.shp')
+    gdf = salem.read_shapefile('data/ne_110m_admin_1_states_provinces.shp')
     names = gdf.name
     for _, name in enumerate(names):
         sm.set_shapefile(gdf.loc[gdf.name == name], linewidth=1)

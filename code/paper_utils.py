@@ -24,7 +24,7 @@ def open_vessel_data():
     cols_to_keep = ['latitude', 'longitude', 'sog', 'cog', 'heading', 'date_edt',
                     '_time_edt']
     data_type_dic = dict(zip(cols, data_type))
-    vessel_loc = pd.read_csv('/Volumes/SAMSUNG/WORK/POSTDOC_RSMAS_2016/DATA/SSElFaro/598655.csv',
+    vessel_loc = pd.read_csv('data/598655.csv',
                              header=8, names=cols, usecols=cols_to_keep,
                              dtype=data_type_dic,
                              parse_dates={'time_edt': ['date_edt', '_time_edt']})
@@ -50,7 +50,7 @@ def open_hurricane_data():
     cols_to_keep = ['Name', 'ISO_time', 'Nature', 'Latitude', 'Longitude',
                     'Wind_WMO', 'Pres_WMO', 'Wind_WMO_Percentile',
                     'Pres_WMO_Percentile']
-    hurricane = pd.read_csv('/Volumes/SAMSUNG/WORK/POSTDOC_RSMAS_2016/DATA/ibtracs/Year.2015.ibtracs_wmo.v03r10.csv',
+    hurricane = pd.read_csv('data/Year.2015.ibtracs_wmo.v03r10.csv',
                             skiprows=[0, 2])
     hurricane.columns = cols
     hurricane = hurricane[cols_to_keep]
@@ -87,9 +87,9 @@ def direction_to_magnitude(a):
     return u, v
 
 def open_HyCOM_data():
-    water_u = xr.open_dataarray('/Volumes/SAMSUNG/WORK/POSTDOC_RSMAS_2016/DATA/HYCOM_Reanalysis/SSElFaro/u_53.X.nc4')
+    water_u = xr.open_dataarray('data//u_53.X.nc4')
     water_u = water_u.sel(depth=slice(0.0, 12.0)).mean(dim='depth')
-    water_v = xr.open_dataarray('/Volumes/SAMSUNG/WORK/POSTDOC_RSMAS_2016/DATA/HYCOM_Reanalysis/SSElFaro/v_53.X.nc4')
+    water_v = xr.open_dataarray('data//v_53.X.nc4')
     water_v = water_v.sel(depth=slice(0.0, 12.0)).mean(dim='depth')
     # Interpolate missing times
     missing_times = np.array(['2015-09-30T12:00:00', '2015-10-01T12:00:00'], dtype='datetime64[ns]')
@@ -98,23 +98,23 @@ def open_HyCOM_data():
     return water_u, water_v
 
 def open_HyCOM_clim_data():
-    water_u = xr.open_dataarray('/Volumes/SAMSUNG/WORK/POSTDOC_RSMAS_2016/DATA/HYCOM_Reanalysis/SSElFaro/climatology/hycom_GLBv0.08_53X_archMN.1994_01_2015_12_u.nc4').squeeze()
+    water_u = xr.open_dataarray('data/hycom_GLBv0.08_53X_archMN.1994_01_2015_12_u.nc4').squeeze()
     water_u = water_u.sel(depth=slice(0.0, 12.0)).mean(dim='depth')
     water_u = water_u.assign_coords(lon=(((water_u.lon + 180) % 360) - 180))
-    water_v = xr.open_dataarray('/Volumes/SAMSUNG/WORK/POSTDOC_RSMAS_2016/DATA/HYCOM_Reanalysis/SSElFaro/climatology/hycom_GLBv0.08_53X_archMN.1994_01_2015_12_v.nc4').squeeze()
+    water_v = xr.open_dataarray('data/hycom_GLBv0.08_53X_archMN.1994_01_2015_12_v.nc4').squeeze()
     water_v = water_v.sel(depth=slice(0.0, 12.0)).mean(dim='depth')
     water_v = water_v.assign_coords(lon=(((water_v.lon + 180) % 360) - 180))
     return water_u, water_v
 
 def open_ERA5_sfc_data():
-    ds = xr.open_dataset('/Users/Ray/Volumes/Pegasus_data/DATA/ERA5/sfc/SSElFaro_sfc_new.nc')
+    ds = xr.open_dataset('data/SSElFaro_sfc_new.nc')
     ds = ds.assign_coords(longitude=(((ds.longitude + 180) % 360) - 180))
     u10 = ds['u10']
     v10 = ds['v10']
     return u10, v10
 
 def open_ERA5_sfc_clim_data():
-    ds = xr.open_mfdataset('/Users/Ray/Volumes/Pegasus_data/DATA/ERA5/monthly_means/winds/*')
+    ds = xr.open_mfdataset('data/era5_moda_20**.nc')
     ds = ds.assign_coords(longitude=(((ds.longitude + 180) % 360) - 180))
     u10 = ds['u10'].mean(dim='time').compute()
     v10 = ds['v10'].mean(dim='time').compute()
@@ -123,7 +123,7 @@ def open_ERA5_sfc_clim_data():
     return u10, v10
 
 def open_ERA5_wave_data():
-    ds = xr.open_dataset('/Users/Ray/Volumes/Pegasus_data/DATA/ERA5/waves/SSElFaro_waves_full.nc')
+    ds = xr.open_dataset('data/SSElFaro_waves_full.nc')
     ds = ds.assign_coords(longitude=(((ds.longitude + 180) % 360) - 180))
     hmax = ds['hmax'] # Maximum individual wave height (m). 218.140
     mp2 = ds['mp2'] # Mean zero-crossing wave period (s). 221.140. DONE
@@ -140,7 +140,7 @@ def open_ERA5_wave_data():
     return hmax, mp2, swh, mwd, pp1d, mwp, bfi, tmax, wss, wdw, wsk, steepness
 
 def open_ERA5_wave_clim_data():
-    ds = xr.open_mfdataset('/Users/Ray/Volumes/Pegasus_data/DATA/ERA5/monthly_means/waves/*.nc')
+    ds = xr.open_mfdataset('data/waves_era5_moda_20**.nc')
     ds = ds.assign_coords(longitude=(((ds.longitude + 180) % 360) - 180))
     hmax = ds['hmax'].mean(dim='time').compute()
     mwd = ds['mwd'] # Mean wave direction (degrees). 230.140
@@ -153,7 +153,7 @@ def open_ERA5_wave_spectra(_time, _latitude, _longitude):
     # _time: str. e.g. '20151001_03'
     # _latitude: float e.g. 25.5305
     # _longitde: float e.g. -75.732
-    da = xr.open_dataarray('/Users/Ray/Volumes/Pegasus_data/DATA/ERA5/waves/SSElFaro_waves_spectra_' + _time + '.nc').squeeze()
+    da = xr.open_dataarray('data/SSElFaro_waves_spectra_' + _time + '.nc').squeeze()
     da = da.assign_coords(longitude=(((da.longitude + 180) % 360) - 180))
     da = da.assign_coords(direction=np.arange(7.5, 352.5 + 15, 15))
     da = da.assign_coords(frequency=np.full(30, 0.03453, dtype=np.float) * (1.1 ** np.arange(0, 30)))
