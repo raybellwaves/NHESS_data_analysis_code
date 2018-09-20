@@ -36,3 +36,8 @@ Data: SSElFaro_waves_full.nc, waves_era5_moda_2000.nc, waves_era5_moda_2010.nc, 
 
 Sources: http://apps.ecmwf.int/data-catalogues/era5/?year=2015&type=an&class=ea&stream=wave&expver=1, http://apps.ecmwf.int/data-catalogues/era5/?type=an&class=ea&stream=wamd&expver=1, http://apps.ecmwf.int/data-catalogues/era5/?stream=wave&expver=1&month=oct&param=251.140&year=2015&type=an&class=ea
 
+State shape files
+-----------------
+
+Data: ne_100m_*
+Source: https://www.naturalearthdata.com/http//www.naturalearthdata.com/download/110m/cultural/ne_110m_admin_1_states_provinces.zip
