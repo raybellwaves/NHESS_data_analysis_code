@@ -27,7 +27,7 @@ def open_ERA5_wave_spectra(_time, _latitude, _longitude):
     # _time: str. e.g. '20151001_03'
     # _latitude: float e.g. 25.5305
     # _longitde: float e.g. -75.732
-    da = xr.open_dataarray('/Users/Ray/Volumes/Pegasus_data/DATA/ERA5/waves/SSElFaro_waves_spectra_' + _time + '.nc').squeeze()
+    da = xr.open_dataarray('data/SSElFaro_waves_spectra_' + _time + '.nc').squeeze()
     da = da.assign_coords(longitude=(((da.longitude + 180) % 360) - 180))
     da = da.assign_coords(direction=np.arange(7.5, 352.5 + 15, 15))
     da = da.assign_coords(frequency=np.full(30, 0.03453, dtype=np.float) * (1.1 ** np.arange(0, 30)))

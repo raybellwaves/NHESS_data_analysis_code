@@ -26,9 +26,9 @@ if not os.path.isdir(figdir):
 
 
 # Figures to create
-region_map = False # Figure of domain with vessel and hurricane information
+region_map = True # Figure of domain with vessel and hurricane information
 
-surface_currents_event = False # current map of event
+surface_currents_event = True # current map of event
 surface_currents_clim = False # current climatology. NOT PAPER FIGURE
 surface_currents_anom = False # HyCOM data minus climatology
 vessel_speed_direction_along_track = False # Time seris of SOG and COG
@@ -45,7 +45,7 @@ wave_anom = False # ERA5 data minus climatology
 hmax_direction_along_track = False # Along track time series of hmax and mean wave direction
 period_steepness_along_track = False # Along track time series of wave period
 
-spectra_1d = True
+spectra_1d = False
 
 if region_map:
     figname = 'domain'
@@ -83,6 +83,7 @@ if region_map:
     # Plot the US states
     # Download the file from https://www.naturalearthdata.com/http//www.naturalearthdata.com/download/110m/cultural/ne_110m_admin_1_states_provinces.zip
     gdf = salem.read_shapefile('data/ne_110m_admin_1_states_provinces.shp')
+    #gdf = salem.read_shapefile('/Volumes/SAMSUNG/WORK/POSTDOC_RSMAS_2016/DATA/natural_earth/ne_110m_admin_1_states_provinces/ne_110m_admin_1_states_provinces.shp')
     names = gdf.name
     for _, name in enumerate(names):
         sm.set_shapefile(gdf.loc[gdf.name == name], linewidth=1)
